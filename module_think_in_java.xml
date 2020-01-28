@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_think_in_java" default="compile.module.think_in_java">
+  <dirname property="module.think_in_java.basedir" file="${ant.file.module_think_in_java}"/>
+  
+  <property name="module.jdk.home.think_in_java" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.think_in_java" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.think_in_java" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.think_in_java" value="-encoding UTF-8 -source 13 -target 13 ${compiler.args}"/>
+  
+  <property name="think_in_java.output.dir" value="${module.think_in_java.basedir}/out/production/Think_in_Java"/>
+  <property name="think_in_java.testoutput.dir" value="${module.think_in_java.basedir}/out/test/Think_in_Java"/>
+  
+  <path id="think_in_java.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="think_in_java.module.production.classpath">
+    <path refid="${module.jdk.classpath.think_in_java}"/>
+  </path>
+  
+  <path id="think_in_java.runtime.production.module.classpath">
+    <pathelement location="${think_in_java.output.dir}"/>
+  </path>
+  
+  <path id="think_in_java.module.classpath">
+    <path refid="${module.jdk.classpath.think_in_java}"/>
+    <pathelement location="${think_in_java.output.dir}"/>
+  </path>
+  
+  <path id="think_in_java.runtime.module.classpath">
+    <pathelement location="${think_in_java.testoutput.dir}"/>
+    <pathelement location="${think_in_java.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.think_in_java">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.think_in_java">
+    <patternset refid="excluded.from.module.think_in_java"/>
+  </patternset>
+  
+  <path id="think_in_java.module.sourcepath">
+    <dirset dir="${module.think_in_java.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.think_in_java" depends="compile.module.think_in_java.production,compile.module.think_in_java.tests" description="Compile module Think_in_Java"/>
+  
+  <target name="compile.module.think_in_java.production" depends="register.custom.compilers" description="Compile module Think_in_Java; production classes">
+    <mkdir dir="${think_in_java.output.dir}"/>
+    <javac2 destdir="${think_in_java.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.think_in_java}/javac">
+      <compilerarg line="${compiler.args.think_in_java}"/>
+      <bootclasspath refid="think_in_java.module.bootclasspath"/>
+      <classpath refid="think_in_java.module.production.classpath"/>
+      <src refid="think_in_java.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.think_in_java"/>
+    </javac2>
+    
+    <copy todir="${think_in_java.output.dir}">
+      <fileset dir="${module.think_in_java.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.think_in_java.tests" depends="register.custom.compilers,compile.module.think_in_java.production" description="compile module Think_in_Java; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.think_in_java" description="cleanup module">
+    <delete dir="${think_in_java.output.dir}"/>
+    <delete dir="${think_in_java.testoutput.dir}"/>
+  </target>
+</project>
